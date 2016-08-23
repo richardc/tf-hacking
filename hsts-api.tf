@@ -40,6 +40,7 @@ resource "aws_api_gateway_integration_response" "HSTS" {
   resource_id = "${aws_api_gateway_rest_api.HSTS.root_resource_id}"
   http_method = "${aws_api_gateway_method.HSTS.http_method}"
   status_code = "${aws_api_gateway_method_response.301.status_code}"
+  selection_pattern = ""
   response_parameters = {
     "method.response.header.Location" = "'https://eat-at-joes.example.com'"
     "method.response.header.Strict-Transport-Security" = "'max-age=10886400; includeSubDomains; preload'"
