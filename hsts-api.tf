@@ -15,6 +15,10 @@ resource "aws_api_gateway_integration" "HSTS" {
   resource_id = "${aws_api_gateway_rest_api.HSTS.root_resource_id}"
   http_method = "${aws_api_gateway_method.HSTS.http_method}"
   type = "MOCK"
+  passthrough_behavior = "WHEN_NO_MATCH"
+  request_templates = {
+    "application/json" = "{\"statusCode\": 200}"
+  }
 }
 
 resource "aws_api_gateway_method_response" "301" {
@@ -22,8 +26,12 @@ resource "aws_api_gateway_method_response" "301" {
   resource_id = "${aws_api_gateway_rest_api.HSTS.root_resource_id}"
   http_method = "${aws_api_gateway_method.HSTS.http_method}"
   status_code = "301"
+  response_models = {
+    "application/json" = "Empty"
+  }
   response_parameters = {
-     "method.response.header.Strict-Transport-Security" = true
+    "method.response.header.Location" = true
+    "method.response.header.Strict-Transport-Security" = true
   }
 }
 
@@ -33,7 +41,8 @@ resource "aws_api_gateway_integration_response" "HSTS" {
   http_method = "${aws_api_gateway_method.HSTS.http_method}"
   status_code = "${aws_api_gateway_method_response.301.status_code}"
   response_parameters = {
-     "method.response.header.Strict-Transport-Security" = "'max-age=10886400; includeSubDomains; preload'"
+    "method.response.header.Location" = "'https://eat-at-joes.example.com'"
+    "method.response.header.Strict-Transport-Security" = "'max-age=10886400; includeSubDomains; preload'"
   }
 }
 
