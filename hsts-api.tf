@@ -47,3 +47,18 @@ resource "aws_api_gateway_integration_response" "HSTS" {
   }
 }
 
+resource "aws_api_gateway_domain_name" "HSTS" {
+  domain_name = "hsts.unixbeard.net"
+
+  certificate_name        = "system_dev"
+  certificate_body        = "${file("cert.pem")}"
+  certificate_private_key = "${file("key.pem")}"
+  certificate_chain       = "${file("chain.pem")}"
+}
+
+resource "aws_api_gateway_base_path_mapping" "HSTS" {
+  api_id      = "${aws_api_gateway_rest_api.HSTS.id}"
+  base_path = "(none)"
+  domain_name = "${aws_api_gateway_domain_name.HSTS.domain_name}"
+}
+
