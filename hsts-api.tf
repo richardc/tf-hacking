@@ -48,7 +48,7 @@ resource "aws_api_gateway_integration_response" "HSTS" {
 }
 
 resource "aws_api_gateway_domain_name" "HSTS" {
-  domain_name = "hsts.unixbeard.net"
+  domain_name = "hsts2.unixbeard.net"
 
   certificate_name        = "system_dev"
   certificate_body        = "${file("cert.pem")}"
