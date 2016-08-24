@@ -47,6 +47,16 @@ resource "aws_api_gateway_integration_response" "HSTS" {
   }
 }
 
+resource "aws_api_gateway_deployment" "HSTS" {
+  depends_on = [
+    "aws_api_gateway_integration.HSTS",
+    "aws_api_gateway_integration_response.HSTS",
+  ]
+
+  rest_api_id = "${aws_api_gateway_rest_api.HSTS.id}"
+  stage_name = "averydistincttest"
+}
+
 resource "aws_api_gateway_domain_name" "HSTS" {
   domain_name = "hsts2.unixbeard.net"
 
@@ -59,6 +69,7 @@ resource "aws_api_gateway_domain_name" "HSTS" {
 resource "aws_api_gateway_base_path_mapping" "HSTS" {
   api_id      = "${aws_api_gateway_rest_api.HSTS.id}"
   base_path = "(none)"
+  stage_name = "${aws_api_gateway_deployment.HSTS.stage_name}"
   domain_name = "${aws_api_gateway_domain_name.HSTS.domain_name}"
 }
 
